@@ -17,11 +17,15 @@ def print_json_page(page):
    data = data['query']['pages']
    page_id = data.iterkeys().next()
 
-   summary = data[page_id]['extract']
-   summary = summary.replace('\n', '\n\n')
+   if page_id == '-1':
+      page_title = data['-1']['title']
+      summary = "Wiki article missing. Check spelling of '{0}'.".format(page_title)
+   else:
+      summary = data[page_id]['extract']
+      summary = summary.replace('\n', '\n\n')
 
-   import textwrap
-   summary = textwrap.fill(summary, get_term_size())
+      import textwrap
+      summary = textwrap.fill(summary, get_term_size())
 
    print(summary)
 
