@@ -1,21 +1,32 @@
 
 def get_term_size():
-   import subprocess
-   columns = int(subprocess.check_output(['stty', 'size']).split()[1])
+   try:
+      import os
+      columns = os.get_terminal_size().columns
+   except AttributeError:
+      try:
+         import subprocess
+         columns = int(subprocess.check_output(['stty', 'size']).split()[1])
+      except OSError:
+         columns = 80
    return columns
 
 def get_json_page(search):
-   import urllib2
    url = 'http://en.wikipedia.org/w/api.php?continue=&action=query&titles={0}&prop=extracts&exintro=&explaintext=&format=json&redirects'
    query = url.format(search)
-   page = urllib2.urlopen(query).read()
+   try:
+      import urllib2
+      page = urllib2.urlopen(query).read()
+   except ImportError:
+      import urllib.request
+      page = urllib.request.urlopen(query).read().decode("utf-8")
    return page
 
 def print_json_page(page):
    import json
    data = json.loads(page)
    data = data['query']['pages']
-   page_id = data.iterkeys().next()
+   page_id = list(data.keys())[0]
 
    if page_id == '-1':
       page_title = data['-1']['title']
