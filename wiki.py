@@ -1,11 +1,8 @@
 
-import textwrap
-
 def get_term_size():
    import subprocess
    columns = int(subprocess.check_output(['stty', 'size']).split()[1])
    return columns
-
 
 def get_json_page(search):
    import urllib2
@@ -27,8 +24,6 @@ def print_json_page(page):
    summary = textwrap.fill(summary, get_term_size())
 
    print(summary)
-
-
 
 if __name__ == '__main__':
    import sys
